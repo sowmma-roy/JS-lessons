@@ -7,9 +7,30 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
+    <style>
+        #formContainer {margin: 25vh auto;}
+        #shareLink {margin: 25vh auto;}
+    </style>
+
 </head>
 
 <body>
+
+    <section style="border: 2px solid black; width: 500px; padding: 15px;" id="formContainer" class="">
+        <!-- <h4>Enter a Secret Message</h4> -->
+        <form style="border: 1px solid green;">
+            <label class="h4">Enter Message</label>
+            <input type="text" placeholder="My secret message" id="message-input">
+            <button class="waves-effect waves-light btn">Create</button>
+        </form>
+    </section>
+
+    <div style="border: 2px solid black; width: 500px; padding: 15px;" id="shareLink" class="hide">
+        <h4>Share link with friend - Stephen's approach</h4>
+        <input id="link-input" />
+    </div>
+
+
 
     <script src="index.js"></script>
 </body>
