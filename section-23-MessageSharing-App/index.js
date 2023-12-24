@@ -38,20 +38,34 @@ document.querySelector('#formContainer').addEventListener('submit', (eve)=>{
 
     //toggle the visibility of initial form with sharelink form
 
-    //can I create a css class with JS? I know we can toggle/add/remove a class, but can we create a class?
-
-
-
-
-
-    
-    
-
-
-    
-
-
 })
+ 
+console.log(window.location)
+if (window.location.hash) {
+    //user is in decoding flow
+    let encryptedMessage = window.location.hash
+    encryptedMessage = encryptedMessage.substring(1)
+    console.log(encryptedMessage)
+
+    document.querySelector('#formContainer').classList.toggle('hide')
+    
+    document.querySelector('#decodingContainer').classList.toggle('hide')
+
+    // console.log((encryptedMessage.substring(0)))
+
+    // console.log(atob(encryptedMessage.substring(0)))
+
+    document.querySelector('#decodedMessage').innerText = atob(encryptedMessage)
+    
+    document.querySelector('#decodingContainer a').href=window.location.pathname
+
+}
+else {
+    //user is in encoding flow
+    console.log("user is in encoding flow")
+}
+
+
 
 
 /*
@@ -86,4 +100,26 @@ const btnEle =  document.querySelector('button')
 
 
 // }
+
+
+3. when testing out the control flow of deriving the #value from the URL, I came across window.location.hash - which is built-in and can be used to check for a hash value inside an url
+
+4. Raw-manual approach not knowing if the hash-property existed inside of the window.location
+
+let currentURL = window.location.href
+console.log(currentURL.href)
+
+// console.log(currentURL.hash)
+
+let urlValuePosition = currentURL.indexOf('#')
+
+if (urlValuePosition > -1) {
+    //user is in decoding flow
+
+    const encryptedMessage = currentURL.substring(urlValuePosition)
+    console.log(encryptedMessage)
+} else {
+    //user is in encoding flow
+    console.log("no hash in the current url")
+}
 */
