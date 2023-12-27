@@ -11,6 +11,7 @@ const path = require('path');
 const chalk = require('chalk');
 
 
+
 fs.readdir(
     cwd(), (err, files)=>{
     if(err){
@@ -18,41 +19,94 @@ fs.readdir(
         return error
     } else {
 
-        //looping over the array to check if file or folder
+        //BAD IMPLEMENTATION - because of randomness of callback invocation
 
-        /*
-        Pseudo Code:
-        - need path-directory of given folder
-        - add the fileName from the array
-        - based on control via fs.stat method, apply color
-        */
+        const allStats = Array(files.length).fill(null)
 
-        for (let fileItem of files){
+        for (let i = 0; i < files.length; i++) {
 
-            // console.log(fileItem);
-
-            console.log(chalk.red("chalk test"));
-
-
-            fs.stat(`${cwd()}/${fileItem}`, (err, stats) => {
+            fs.lstat(files[i], (err, stats) => {
                 if (err) {
                     console.log(err)
                     throw error
                 }
 
-                if (stats.isFile()){
-                    // console.log(chalk.yellow(fileItem))
-                    console.log('\x1b[93m%s\x1b[0m', fileItem)
-                } else if(stats.isDirectory()){
-                    console.log('\x1b[96m%s\x1b[0m', fileItem+"/")
+                // else {
+                //     console.log(files[i], stats.isFile())
+                //     callbackResults[i] = `${files[i]} - ${stats.isFile()}`
+                //     // console.log(callbackResults)
+                // }
 
-                    // console.log(chalk.red(fileItem+"/"))
-  
-                } else {
-                    console.log(fileItem)
+                // if (stats.isFile()) {
+                //     callbackResults[i] = files[i]
+                // } else {
+                //     callbackResults[i] = files[i]
+                // }
+                
+                // console.log(callbackResults)
+
+                // console.log(stats)
+                allStats[i] = stats
+
+                //.every will return an overall of FALSE if at least 1 item is falsy
+                const invokedResults = allStats.every((stats)=>{
+                    return stats
+                })
+
+
+                if (invokedResults) {
+                    
+                    // for (resultStats of invokedResults) {
+                    //     console.log(files[i], resultStats.isFile())
+                    // }
+                    //for of loop is not iterable
+
+
+                    allStats.forEach((resultStat, index) => {
+
+                        console.log(files[index], resultStat.isFile())
+                        
+                    });
+
                 }
+
+
+        
+
+
+
+
+
+
+                // if (stats.isFile()){
+                //     // console.log(chalk.yellow(fileItem))
+                //     console.log('\x1b[93m%s\x1b[0m', fileName)
+
+                //     //
+                // } else if(stats.isDirectory()){
+                //     console.log('\x1b[96m%s\x1b[0m', fileName+"/")
+
+                //     // console.log(chalk.red(fileItem+"/"))
+  
+                // } else {
+                //     console.log(fileName)
+                // }
+
+
             })
+
+
         }
+
+
+        console.log(allStats)
+
+        // if (callbackResults.includes(!null)){
+        //     //all our callbacks have been invoked, now we can print and order our files
+        //     console.log(callbackResults)
+        // }
+
+        // console.log(callbackResults)
 
 
     }
