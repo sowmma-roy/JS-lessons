@@ -6,6 +6,8 @@ const debounce = require('lodash.debounce');
 const chokidar = require('chokidar');
 const program = require('caporal');
 const fs = require('fs');
+const {spawn} = require('child_process')
+const chalk = require('chalk')
 
 
 program
@@ -26,22 +28,41 @@ program
         throw new Error('could not find the file ' + name)
     }
 
-    const start = debounce(() => {
-        console.log("Starting user's program")
+    let childProcess;
+    let cpId;
 
-        //run users file
-        const userFile = require(`./${name}`)
-        console.log("Users file-", userFile)
+
+    const start = debounce(() => {
+        // console.log("Starting user's program")
+
+        //run users file - my implementation
+        // const userFile = require(`./${name}`)
+        // console.log("Users file-", userFile)
 
         //if any changes occur stop existing process and re-start
+        
+        if (childProcess) {
+            //terminate old child process and start new cp
+            // childProcess.kill(cpId, 'SIGINT')
+            childProcess.kill()
+        }
+
+        console.log(chalk.blue(">>> Starting user's program"))
+        //Stephen's approach
+        childProcess = spawn('node', [name], {stdio: 'inherit'})
+
+        // cpId = childProcess.pid;
+        // console.log(cpId)
+
 
     }, 100)
 
 
-    // chokidar.watch('.')
-    // .on('add', start)
-    // .on('change', () => start)
-    // .on('unlink', ()=> start)
+    chokidar
+    .watch('.')
+    .on('add', start)
+    .on('change', start)
+    .on('unlink', start)
 
 
     // if ((typeof process !== 'undefined') && 
@@ -59,10 +80,10 @@ program
     // }
 
 
-    chokidar.watch('.')
-    .on('add', start)
-    .on('change', () => start)
-    .on('unlink', ()=> start)
+    // chokidar.watch('.')
+    // .on('add', start)
+    // .on('change', () => start)
+    // .on('unlink', ()=> start)
 
 
 
