@@ -24,6 +24,24 @@ app.get('/12', (req, res)=>{
 })
 
 app.post('/12', (req, res)=> {
+
+    req.on('data', (data)=>{
+        console.log
+        const parsed = (data.toString('utf8').split('&'))
+
+        const formData = {}
+
+        for (let data of parsed) {
+
+            const [key,value] = data.split('=')
+            formData[key] = value
+        }
+
+        console.log(formData)
+
+    })
+
+
     res.send('Account created; The form-data has undergone a POST-request')
 })
 
@@ -46,6 +64,21 @@ app.listen(3001, ()=>{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 LL:
 
@@ -56,4 +89,17 @@ app.get('/signup', (req, res)=>{
 
 2. express and node works together on understanding the content we pass as RESPONSE to be read by browser. If the content looks like html, then browser is going to render it as html
 
+
+3.
+Q: 
+for general search query into the website, we use .get request eg: 'steel pot'. However if user wants to log into their account, then we want to do a post request becuase of security, but post generally means we are creating a new entry of sorts (right?) but we are essentially doing a get type of activity right becuase we are try to tell tell the user if their password is accepted or not. Is it such that depsite it being a post - we necessarily dont have to create a new entry and can do what we want?
+
+4. my approach to add key-value pair into formData obj        
+for (let data of parsed) {
+    const iterationArray = (data.split('='))
+    formData[`${iterationArray[0]}`] = iterationArray[1]
+
+    const [key,value] = data.split('=')
+    formData[key] = value
+}
 */
