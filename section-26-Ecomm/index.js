@@ -23,24 +23,35 @@ app.get('/12', (req, res)=>{
     `)
 })
 
-app.post('/12', (req, res)=> {
+//middleware helper function 
+const bodyParser = (req, res, next) => {
 
-    req.on('data', (data)=>{
-        console.log
-        const parsed = (data.toString('utf8').split('&'))
+    if (req.method === "POST") {
 
-        const formData = {}
+        req.on('data', (data)=>{
+            console.log
+            const parsed = (data.toString('utf8').split('&'))
+    
+            const formData = {}
+    
+            for (let data of parsed) {
+                const [key,value] = data.split('=')
+                formData[key] = value
+            }
 
-        for (let data of parsed) {
+            console.log(formData)
+            req.body = formData
+            next()//sign that our middleware function has completed its work, and call the next callback function 
+        })
+    } else {
+        next()
+    }
 
-            const [key,value] = data.split('=')
-            formData[key] = value
-        }
+}
 
-        console.log(formData)
-
-    })
-
+app.post('/12', bodyParser, (req, res)=> {
+    //we pass the bodyParse function in the middle, and it has access to req, and res arguments, which it calls upon
+    console.log(req)
 
     res.send('Account created; The form-data has undergone a POST-request')
 })
